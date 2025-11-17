@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跳跳方块 - 轻量级跳跃游戏</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="gameContainer">
+        <!-- 首页 -->
+        <div id="homeScreen" class="screen active">
+            <div class="home-content">
+                <h1 class="game-title">跳跳方块</h1>
+                <div class="game-subtitle">挑战你的反应和精准度</div>
+                
+                <div class="menu-buttons">
+                    <button id="startBtn" class="btn btn-primary">开始游戏</button>
+                    <button id="rankingBtn" class="btn btn-secondary">排行榜</button>
+                    <button id="skinsBtn" class="btn btn-secondary">皮肤商店</button>
+                </div>
+                
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">最高分</span>
+                        <span id="highScore" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">游戏次数</span>
+                        <span id="gameCount" class="stat-value">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 游戏界面 -->
+        <div id="gameScreen" class="screen">
+            <div class="game-header">
+                <div class="score-display">
+                    <span class="score-label">得分</span>
+                    <span id="currentScore" class="score-value">0</span>
+                </div>
+                <div class="combo-display">
+                    <span id="comboText" class="combo-text">连击 x1</span>
+                </div>
+            </div>
+            
+            <div id="gameArea">
+                <div id="character" class="character"></div>
+                <div id="platforms"></div>
+                <div id="trajectory"></div>
+            </div>
+            
+            <div class="game-controls">
+                <div id="powerBar" class="power-bar">
+                    <div id="powerFill" class="power-fill"></div>
+                </div>
+                <div class="power-label">长按蓄力跳跃</div>
+            </div>
+            
+            <div id="perfectText" class="perfect-text">Perfect!</div>
+        </div>
+
+        <!-- 游戏结束界面 -->
+        <div id="gameOverScreen" class="screen">
+            <div class="game-over-content">
+                <h2 class="game-over-title">游戏结束</h2>
+                
+                <div class="final-stats">
+                    <div class="final-score">
+                        <span class="final-score-label">本局得分</span>
+                        <span id="finalScore" class="final-score-value">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <div class="final-stat">
+                            <span class="final-stat-label">完美着陆</span>
+                            <span id="perfectCount" class="final-stat-value">0</span>
+                        </div>
+                        <div class="final-stat">
+                            <span class="final-stat-label">最大连击</span>
+                            <span id="maxCombo" class="final-stat-value">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="share-section">
+                    <div id="shareText" class="share-text">你打败了0%的好友</div>
+                    <button id="shareBtn" class="btn btn-share">分享战绩</button>
+                </div>
+                
+                <div class="game-over-buttons">
+                    <button id="playAgainBtn" class="btn btn-primary">再来一局</button>
+                    <button id="backHomeBtn" class="btn btn-secondary">返回首页</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 排行榜界面 -->
+        <div id="rankingScreen" class="screen">
+            <div class="ranking-content">
+                <h2 class="ranking-title">排行榜</h2>
+                
+                <div class="player-info">
+                    <div class="player-name-section">
+                        <label for="playerName">你的昵称:</label>
+                        <input type="text" id="playerName" placeholder="输入昵称" maxlength="10">
+                        <button id="saveNameBtn" class="btn btn-small">保存</button>
+                    </div>
+                    <div class="player-rank">
+                        <span>当前排名: </span>
+                        <span id="playerRank">未上榜</span>
+                    </div>
+                </div>
+                
+                <div id="rankingList" class="ranking-list">
+                    <!-- 排行榜列表将在这里动态生成 -->
+                </div>
+                
+                <button id="backFromRankingBtn" class="btn btn-secondary">返回</button>
+            </div>
+        </div>
+
+        <!-- 皮肤商店界面 -->
+        <div id="skinsScreen" class="screen">
+            <div class="skins-content">
+                <h2 class="skins-title">皮肤商店</h2>
+                
+                <div id="skinsList" class="skins-list">
+                    <!-- 皮肤列表将在这里动态生成 -->
+                </div>
+                
+                <button id="backFromSkinsBtn" class="btn btn-secondary">返回</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 音效元素 -->
+    <audio id="jumpSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+    <audio id="perfectSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+    <audio id="gameOverSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+
+    <!-- 新增系统状态显示 -->
+    <div id="systemStatus" class="system-status">
+        <div id="storageHealth" class="status-item">
+            <span class="status-icon">💾</span>
+            <span class="status-text">存储状态检测中...</span>
+        </div>
+        <div id="antiCheatStatus" class="status-item">
+            <span class="status-icon">🛡️</span>
+            <span class="status-text">反作弊系统运行中</span>
+        </div>
+        <div id="languageSelector" class="language-selector">
+            <select id="languageSelect">
+                <option value="zh-CN">简体中文</option>
+                <option value="en-US">English</option>
+                <option value="ja-JP">日本語</option>
+                <option value="ko-KR">한국어</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 新增首次游戏结束提示模态框 -->
+    <div id="firstGameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">🎉 恭喜首次游戏!</h3>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">您获得了不错的成绩! 设置一个昵称来保存您的分数吧。</p>
+                <div class="nickname-input-group">
+                    <input type="text" id="firstNickname" placeholder="输入您的昵称" maxlength="10">
+                    <div class="nickname-suggestions">
+                        <button class="suggestion-btn" data-nickname="跳跃者">跳跃者</button>
+                        <button class="suggestion-btn" data-nickname="方块大师">方块大师</button>
+                        <button class="suggestion-btn" data-nickname="新手玩家">新手玩家</button>
+                    </div>
+                </div>
+                <div id="nicknameStatus" class="nickname-status"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveFirstNickname" class="btn btn-primary">保存昵称</button>
+                <button id="skipFirstNickname" class="btn btn-secondary">跳过</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增反作弊检测提示 -->
+    <div id="antiCheatAlert" class="anti-cheat-alert">
+        <div class="alert-content">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-text">
+                <div class="alert-title">检测到异常分数</div>
+                <div class="alert-description">正在进行二次验证，请稍候...</div>
+            </div>
+            <div class="alert-progress">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增存储状态警告 -->
+    <div id="storageWarning" class="storage-warning">
+        <div class="warning-content">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-text">
+                <div class="warning-title">存储空间警告</div>
+                <div class="warning-description">您的浏览器存储空间可能不足，这可能会影响游戏数据的保存。</div>
+            </div>
+            <button id="dismissStorageWarning" class="warning-close">×</button>
+        </div>
+    </div>
+
+    <!-- 系统脚本 -->
+    <script src="precision-judgment-system.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

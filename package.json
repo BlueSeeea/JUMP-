@@ -1,0 +1,47 @@
+{
+  "name": "jump-block-game",
+  "version": "1.0.0",
+  "description": "A lightweight jumping game similar to Jump Jump",
+  "main": "index.html",
+  "scripts": {
+    "start": "node start.js dev",
+    "dev": "node start.js dev",
+    "serve": "npx serve .",
+    "build": "node start.js build",
+    "check": "node deploy-check.js",
+    "test": "node deploy-check.js",
+    "preview": "npx serve . -p 8080"
+  },
+  "keywords": [
+    "game",
+    "jump",
+    "jumping",
+    "casual",
+    "mobile",
+    "webgame",
+    "html5",
+    "css3",
+    "javascript"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/jump-block-game.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/jump-block-game/issues"
+  },
+  "homepage": "https://your-username.github.io/jump-block-game/",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
